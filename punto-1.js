@@ -27,7 +27,34 @@ function obtenerJson(url) {
 }
 let jsonPedidos;
 let jsonProductos;
-Promise.all([jsonPedidos = obtenerJson(urlPedidos), jsonProductos = obtenerJson(urlProductos)]).then((values) => {
-    console.log(jsonProductos);
+obtenerJson(urlPedidos).then(function(response)
+{
+    jsonPedidos = JSON.parse(response);
+})
+obtenerJson(urlProductos).then(function(response)
+{
+    jsonProductos = JSON.parse(response);
+})
+Promise.all([obtenerJson(urlPedidos), obtenerJson(urlProductos)]).then((values) => {
+    let numMax = 0;
+    let productoMax = 0;
+    for (let i = 0; i < jsonProductos.length; i++) {
+        let productoActual = jsonProductos[i];
+        let numActual = 0;
+        for (let j = 0; j < jsonPedidos.length; j++) {
+            if(productoActual.idproducto === jsonPedidos[j].idproducto)
+            {
+                numActual++
+            }
+            
+        }
+        if (numActual > numMax)
+        {
+            productoMax = productoActual.nombreProducto
+            numMax = numActual
+        }
+        
+    }
+    console.log(productoMax, numMax)
 })
 
